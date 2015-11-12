@@ -115,5 +115,5 @@ class Ui_Form(object):
         self.radioButton_search.setText(QtGui.QApplication.translate("Form", "通常検索(&H)", None, QtGui.QApplication.UnicodeUTF8))
         self.radioButton_regex.setText(QtGui.QApplication.translate("Form", "正規表現(&E)", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_execute.setText(QtGui.QApplication.translate("Form", "置き換える(&P)", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_notification.setText(QtGui.QApplication.translate("Form", "各種項目を入力してください...", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_notification.setText(QtGui.QApplication.translate("Form", "すべての項目を入力してください。", None, QtGui.QApplication.UnicodeUTF8))
 

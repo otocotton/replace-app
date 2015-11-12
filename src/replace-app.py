@@ -12,18 +12,55 @@ from PySide.QtUiTools import QUiLoader
 
 from mainUI import Ui_Form
 
-class mainUI(QtGui.QDialog):
+class mainUI(QtGui.QWidget):
     def __init__(self,parent=None):
-        QtGui.QDialog.__init__(self,parent)
+        QtGui.QWidget.__init__(self,parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        default_dir = "dir"
+        default_dir = os.getcwd()
         self.ui.lineEdit_choose_directory.setText(default_dir)
         self.ui.toolButton_choose_directory.clicked.connect(self.toolButton_choose_directory)
         self.ui.radioButton_search.setChecked(True)
         self.ui.pushButton_execute.clicked.connect(self.pushButton_execute)
         self.ui.listWidget_show_dst_files.setSortingEnabled(True)
         self.ui.label_notification.setStyleSheet("QLabel{color: black;}")
+
+        self.ui.lineEdit_choose_directory.editingFinished.connect(self.handle_lineEdit_choose_directory)
+        self.ui.lineEdit_extension.textEdited.connect(self.handle_lineEdit_extension)
+        self.ui.lineEdit_suffix.textEdited.connect(self.handle_lineEdit_suffix)
+        self.ui.lineEdit_search_word.textEdited.connect(self.handle_lineEdit_search_word)
+        self.ui.lineEdit_replace_word.textEdited.connect(self.handle_lineEdit_replace_word)
+
+    def handle_lineEdit_choose_directory(self):
+        if self.ui.lineEdit_choose_directory.text() == "":
+            self.ui.lineEdit_choose_directory.setStyleSheet("QLineEdit{border: 2px solid #e91e63; border-radius: 4px;}")
+        else:
+            self.ui.lineEdit_choose_directory.setStyleSheet("QLineEdit{border: 2px solid #8bc34a; border-radius: 4px;}")
+
+    def handle_lineEdit_extension(self):
+        if self.ui.lineEdit_extension.text() == "":
+            self.ui.lineEdit_extension.setStyleSheet("QLineEdit{border: 2px solid #e91e63; border-radius: 4px;}")
+        else:
+            self.ui.lineEdit_extension.setStyleSheet("QLineEdit{border: 2px solid #8bc34a; border-radius: 4px;}")
+
+    def handle_lineEdit_suffix(self):
+        if self.ui.lineEdit_suffix.text() == "":
+            self.ui.lineEdit_suffix.setStyleSheet("QLineEdit{border: 2px solid #e91e63; border-radius: 4px;}")
+        else:
+            self.ui.lineEdit_suffix.setStyleSheet("QLineEdit{border: 2px solid #8bc34a; border-radius: 4px;}")
+
+    def handle_lineEdit_search_word(self):
+        pass
+        if self.ui.lineEdit_search_word.text() == "":
+            self.ui.lineEdit_search_word.setStyleSheet("QLineEdit{border: 2px solid #e91e63; border-radius: 4px;}")
+        else:
+            self.ui.lineEdit_search_word.setStyleSheet("QLineEdit{border: 2px solid #8bc34a; border-radius: 4px;}")
+
+    def handle_lineEdit_replace_word(self):
+        if self.ui.lineEdit_replace_word.text() == "":
+            self.ui.lineEdit_replace_word.setStyleSheet("QLineEdit{border: 2px solid #e91e63; border-radius: 4px;}")
+        else:
+            self.ui.lineEdit_replace_word.setStyleSheet("QLineEdit{border: 2px solid #8bc34a; border-radius: 4px;}")
 
     def toolButton_choose_directory(self,*args):
         directory = self.fileDialogMod()
@@ -37,42 +74,45 @@ class mainUI(QtGui.QDialog):
         return directory
 
     def pushButton_execute(self,*args):
-        if self.ui.lineEdit_choose_directory.text() == "":
-            self.ui.label_notification.setStyleSheet("QLabel{color: red;}")
-            self.ui.label_notification.setText("対象フォルダが選択されていません。")
-        else:
-            src_directory = self.ui.lineEdit_choose_directory.text()
-
-        if self.ui.lineEdit_extension.text() == "":
-            self.ui.label_notification.setStyleSheet("QLabel{color: red;}")
-            self.ui.label_notification.setText("拡張子が入力されていません。")
-        else:
-            target_extension = self.ui.lineEdit_extension.text()
-
-        if self.ui.lineEdit_suffix.text() == "":
-            self.ui.label_notification.setStyleSheet("QLabel{color: red;}")
-            self.ui.label_notification.setText("接尾辞が入力されていません。")
-        else:
-            dst_directory_suffix = self.ui.lineEdit_suffix.text()
-
         if self.ui.radioButton_regex.isChecked():
             isRegularExpression = True
         else:
             isRegularExpression = False
 
-        if self.ui.lineEdit_search_word.text() == "":
-            self.ui.label_notification.setStyleSheet("QLabel{color: red;}")
-            self.ui.label_notification.setText("検索語句が入力されていません。")
+        if self.ui.lineEdit_suffix.text() == "":
+            self.ui.label_notification.setStyleSheet("QLabel{color: #e91e63;}")
+            self.ui.label_notification.setText("接尾辞が入力されていません。")
         else:
-            search_word = self.ui.lineEdit_search_word.text()
+            dst_directory_suffix = self.ui.lineEdit_suffix.text()
+
+        if self.ui.lineEdit_extension.text() == "":
+            self.ui.label_notification.setStyleSheet("QLabel{color: #e91e63;}")
+            self.ui.label_notification.setText("拡張子が入力されていません。")
+        else:
+            target_extension = self.ui.lineEdit_extension.text()
 
         if self.ui.lineEdit_replace_word.text() == "":
-            self.ui.label_notification.setStyleSheet("QLabel{color: red;}")
+            self.ui.label_notification.setStyleSheet("QLabel{color: #e91e63;}")
             self.ui.label_notification.setText("置換語句が入力されていません。")
         else:
             replace_word = self.ui.lineEdit_replace_word.text()
 
+        if self.ui.lineEdit_search_word.text() == "":
+            self.ui.label_notification.setStyleSheet("QLabel{color: #e91e63;}")
+            self.ui.label_notification.setText("検索語句が入力されていません。")
+        else:
+            search_word = self.ui.lineEdit_search_word.text()
+
+        if self.ui.lineEdit_choose_directory.text() == "":
+            self.ui.label_notification.setStyleSheet("QLabel{color: #e91e63;}")
+            self.ui.label_notification.setText("対象フォルダが選択されていません。")
+        elif not os.path.exists(self.ui.lineEdit_choose_directory.text()):
+            self.ui.label_notification.setText("対象フォルダが存在していません。")
+        else:
+            src_directory = self.ui.lineEdit_choose_directory.text()
+
         if not self.ui.lineEdit_choose_directory.text() == "" \
+        and os.path.exists(self.ui.lineEdit_choose_directory.text()) \
         and not self.ui.lineEdit_extension.text() == "" \
         and not self.ui.lineEdit_suffix.text() == "" \
         and not self.ui.lineEdit_search_word.text() == "" \
@@ -155,7 +195,7 @@ class mainUI(QtGui.QDialog):
             progress += 1
             self.ui.listWidget_show_dst_files.addItem(os.path.basename(file))
             self.ui.progressBar.setValue(round(progress/len(src_file_list)*100))
-        self.ui.label_notification.setStyleSheet("QLabel{color: green;}")
+        self.ui.label_notification.setStyleSheet("QLabel{color: #8bc34a;}")
         self.ui.label_notification.setText("テキスト置換が完了しました！")
 
 def main():
@@ -164,6 +204,8 @@ def main():
     app.setStyle('cleanlooks')
     QtCore.QTextCodec.setCodecForCStrings( QtCore.QTextCodec.codecForLocale() )
     win = mainUI()
+    win.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+    win.setFixedSize(600, 260)
     win.show()
     sys.exit(app.exec_())    
 
